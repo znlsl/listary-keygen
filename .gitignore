@@ -1,0 +1,13 @@
+# build artifacts
+tools/*.pdb
+obj/
+bin/
+*.user
+
+# python
+__pycache__/
+*.pyc
+
+# IDE
+.vs/
+.idea/
