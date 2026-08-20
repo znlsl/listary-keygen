@@ -1,4 +1,4 @@
-# Build Listary Keygen & Filler (C#5 / .NET Framework 4.8, csc)
+# Build Listary Activate (C#5 / .NET Framework 4.8, csc)
 # Usage: powershell -ExecutionPolicy Bypass -File build.ps1
 $ErrorActionPreference = 'Stop'
 
@@ -31,8 +31,10 @@ function Invoke-Csc {
 
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
-Invoke-Csc 'winexe' 'ListaryKeyGen.exe' $refsGui @((Join-Path $src 'ListaryKeyGen.cs'), (Join-Path $src 'LicenseAlgo.cs'))
-Invoke-Csc 'winexe' 'ListaryKeyFill.exe' ($refsGui + $refsWeb) @((Join-Path $src 'ListaryKeyFill.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'))
+# one-click activation GUI (generation + writing in a single window)
+Invoke-Csc 'winexe' 'ListaryActivate.exe' ($refsGui + $refsWeb) @((Join-Path $src 'ListaryActivate.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'))
+
+# console self-check (algorithm + config writer)
 Invoke-Csc 'exe' 'test_tool.exe' (@('/r:System.dll') + $refsWeb + @(("/r:" + (Join-Path $fx 'System.Numerics.dll')))) @((Join-Path $tests 'test_tool.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'))
 
 Write-Host ''
@@ -40,4 +42,4 @@ Write-Host 'Running self-check...'
 & (Join-Path $out 'test_tool.exe')
 if ($LASTEXITCODE -ne 0) { throw 'test_tool self-check FAILED' }
 Write-Host ''
-Write-Host 'Build complete. Artifacts in tools/'
+Write-Host 'Build complete. Artifacts in tools/ (ListaryActivate.exe, test_tool.exe)'
