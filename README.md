@@ -1,12 +1,16 @@
 # Listary Pro 一键激活工具
 
-> 开源仓库：https://github.com/LING71671/listary-keygen
-> 正版购买：https://www.listary.com/pro
+<p align="left">
+  <b>简体中文</b> | <a href="README_EN.md">English</a>
+</p>
+
+> 开源仓库：https://github.com/LING71671/listary-keygen  
+> 正版购买：[中文官网 (https://www.listary.net)](https://www.listary.net) ｜ [国际官网 (https://www.listary.com/pro)](https://www.listary.com/pro)
 
 一个窗口完成 Listary Pro 许可证激活的 Windows GUI 工具，原理来自对
 **`Listary.Core.Pro.LicenseChecker.CheckLicense`** 校验算法的逆向还原。
 
-> **声明**：本项目仅供计算机逆向工程与软件安全机制的学习、研究与交流。请勿用于商业及未授权用途，生产环境请支持并购买 [Listary 正版授权](https://www.listary.com/pro)。
+> **声明**：本项目仅供计算机逆向工程与软件安全机制的学习、研究与交流。请勿用于商业及未授权用途，生产环境请支持并购买 [Listary 正版授权](https://www.listary.net)。
 
 ## 功能
 
@@ -39,7 +43,8 @@ powershell -ExecutionPolicy Bypass -File build.ps1
 
 ```
 listary-keygen/
-├── README.md                    # 本文件
+├── README.md                    # 中文说明文档（本文件）
+├── README_EN.md                 # English documentation
 ├── src/
 │   ├── ListaryActivate.cs       # 一键激活 GUI（生成 + 填写一体化）
 │   ├── LicenseAlgo.cs           # 算法核心（H1/H2/H3/Checksum/Generate/Verify/随机邮箱）
