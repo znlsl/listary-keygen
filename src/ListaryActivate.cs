@@ -24,7 +24,7 @@ namespace ListaryActivateApp
         TextBox txtLog;
 
         const string VERSION_TAG = "v1.0.0";
-        const string REPO_URL = "https://github.com/your-name/listary-keygen";
+        const string REPO_URL = "https://github.com/LING71671/listary-keygen";
         const string BUY_URL = "https://www.listary.com/pro";
 
         public MainForm()

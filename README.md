@@ -1,6 +1,6 @@
 # Listary Pro 一键激活工具
 
-> 开源仓库：https://github.com/your-name/listary-keygen （发布后替换为真实地址；GUI 底部与本文档同步更新）
+> 开源仓库：https://github.com/LING71671/listary-keygen
 > 正版购买：https://www.listary.com/pro
 
 一个窗口完成 Listary Pro 许可证激活的 Windows GUI 工具，原理来自对
