@@ -5,6 +5,7 @@ import { AppPreview } from './components/AppPreview';
 import { KeygenSimulator } from './components/KeygenSimulator';
 import { Features } from './components/Features';
 import { WorkflowSteps } from './components/WorkflowSteps';
+import { FAQSection } from './components/FAQSection';
 import { DisclaimerSection } from './components/DisclaimerSection';
 import { Footer } from './components/Footer';
 
@@ -18,6 +19,7 @@ export const App: React.FC = () => {
         <KeygenSimulator />
         <Features />
         <WorkflowSteps />
+        <FAQSection />
         <DisclaimerSection />
       </main>
       <Footer />

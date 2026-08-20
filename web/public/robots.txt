@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://listary.int0.cc/sitemap.xml

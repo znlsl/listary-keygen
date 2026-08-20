@@ -18,6 +18,7 @@ export const Navbar: React.FC = () => {
           <a href="#playground" className="hover:text-neutral-100 transition-colors">在线计算</a>
           <a href="#features" className="hover:text-neutral-100 transition-colors">核心特性</a>
           <a href="#workflow" className="hover:text-neutral-100 transition-colors">激活流程</a>
+          <a href="#faq" className="hover:text-neutral-100 transition-colors">常见问答</a>
           <a href="#disclaimer" className="hover:text-neutral-100 transition-colors">免责声明</a>
         </nav>
 
