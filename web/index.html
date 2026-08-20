@@ -150,6 +150,14 @@
           "mainEntity": [
             {
               "@type": "Question",
+              "name": "为什么在 Listary 软件界面手动输入激活码会提示无效？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "因为在 Listary 软件界面内点击激活时，客户端会强制发起 HTTP 联网请求连接官方服务器进行云端授权校验（算号器生成的离线密钥不在官方服务器数据库中，因此会返回失败）。但 Listary 每次启动时加载本地配置，则是完全在本地调用内置 CheckLicense 密码学算法进行离线校验。因此只要使用工具写入 Preferences.json 配置文件，重启后即可 100% 离线激活成功。"
+              }
+            },
+            {
+              "@type": "Question",
               "name": "Listary Pro 许可证的校验算法原理是什么？",
               "acceptedAnswer": {
                 "@type": "Answer",

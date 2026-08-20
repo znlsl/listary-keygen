@@ -160,6 +160,19 @@ export const KeygenSimulator: React.FC = () => {
             className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-md p-2.5 text-[11px] sm:text-xs font-mono text-neutral-300 focus:outline-none focus:border-neutral-600 resize-none leading-relaxed select-all"
           />
         </div>
+
+        {/* Notice Banner */}
+        <div className="p-3.5 rounded-md bg-neutral-900/80 border border-neutral-800 text-xs text-neutral-400 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-neutral-200 font-semibold">
+            <span>⚠️ 为什么直接在软件界面粘贴激活码会提示无效？</span>
+          </div>
+          <p className="leading-relaxed">
+            在 Listary 软件界面手动输入激活码会<strong className="text-neutral-300 font-medium">强制发起联网请求</strong>连接官方服务器验证（离线密钥不在云端库中故报错）。而 Listary 启动时加载本地配置则是<strong className="text-neutral-300 font-medium">完全离线校验（CheckLicense）</strong>。
+          </p>
+          <p className="text-[11px] text-neutral-400">
+            👉 正确做法：运行一键激活工具写入 <code className="text-neutral-300 bg-neutral-950 px-1 py-0.5 rounded border border-neutral-800">Preferences.json</code>，然后重启 Listary 即可离线生效。
+          </p>
+        </div>
       </div>
     </section>
   );

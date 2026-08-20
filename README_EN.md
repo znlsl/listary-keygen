@@ -11,6 +11,21 @@ A single-window Windows GUI tool for Listary Pro license generation and activati
 
 > **Notice**: This project is for computer reverse-engineering and software security research/educational purposes only. Do NOT use for unauthorized or commercial purposes. For production environments, please purchase a genuine license from the [Listary Official Website](https://www.listary.net).
 
+---
+
+## ⚠️ Important Note: Why Manual GUI Input Fails (Online vs. Offline Verification)
+
+If you copy the generated license key and attempt to paste it directly into the **Listary UI Settings -> "Activate" dialog**, the application will report **"Invalid License" or "Activation Failed"**. This is expected behavior due to architectural differences:
+
+| Activation Method | Validation Mechanism | Result |
+| :--- | :--- | :--- |
+| **Manual input inside Listary UI Dialog** | **Forces an online HTTP request** to verify against Listary's official cloud license database | ❌ **Invalid** (Offline algorithmically generated keys do not exist on the remote server) |
+| **Writing to `Preferences.json` via this tool** | On startup, Listary loads local settings and invokes the **offline `CheckLicense` cryptographic hash algorithm** | ✅ **Success** (Algorithm is 100% self-contained and passes locally) |
+
+> **Correct Usage**: Do NOT paste the key into Listary's UI dialog. Simply launch `ListaryActivate.exe`, click **"One-Click Activate"** to write to the config file, and then **restart Listary**. Pro features will be activated immediately upon startup.
+
+---
+
 ## Features
 
 `ListaryActivate.exe` (Single-window, one-click workflow):
@@ -56,6 +71,7 @@ listary-keygen/
 ├── docs/
 │   ├── algorithm.md             # CheckLicense algorithm analysis (Constants, hashes, bit layout, weaknesses)
 │   └── reverse-engineering.md   # Reverse engineering methodology (Protection mechanisms, unpacking, dump)
+├── web/                         # Landing page & online calculator frontend source (React + TailwindCSS)
 ├── build.ps1                    # One-click build script
 └── LICENSE                      # MIT License
 ```

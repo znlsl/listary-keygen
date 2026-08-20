@@ -12,6 +12,21 @@
 
 > **声明**：本项目仅供计算机逆向工程与软件安全机制的学习、研究与交流。请勿用于商业及未授权用途，生产环境请支持并购买 [Listary 正版授权](https://www.listary.net)。
 
+---
+
+## ⚠️ 重要原理说明：为什么必须通过工具写入配置？
+
+很多用户会尝试复制生成的激活码，然后打开 Listary 软件设置界面手动粘贴，结果**提示许可证无效**。这是正常现象，原因如下：
+
+| 激活途径 | 校验机制 | 结果 |
+| :--- | :--- | :--- |
+| **在 Listary 界面手动输入激活码** | **强制发起联网请求**，向 Listary 官方服务器核对订单与授权库 | ❌ **提示无效**（算号器生成的离线密钥不存在于官方云端数据库） |
+| **通过本工具写入 `Preferences.json` 配置文件** | 启动时调用内部 **`CheckLicense` 本地密码学哈希离线校验** | ✅ **激活成功**（本地算法自包含，100% 离线通过） |
+
+> **正确用法**：无需在 Listary 界面手动输入任何激活码，直接运行 `ListaryActivate.exe` 点击**「一键激活」**写入配置文件，然后**重启 Listary** 即可直接生效。
+
+---
+
 ## 功能
 
 `ListaryActivate.exe`（单窗口，一键流程）：
@@ -19,11 +34,11 @@
 1. **邮箱**：手动输入，或点「随机邮箱」一键生成（`user<8位随机>@常用域名`）
 2. **密钥**：点「仅生成密钥」或直接点「一键激活」——按算法自动生成 192 字符密钥并自校验（Verify=True）
 3. **写入**：校验通过后自动完成
-   - 检测 Listary 进程（运行中会警告：程序退出时内存数据会覆盖配置）
+   - 检测 Listary 进程（运行中会提示并自动处理，避免退出时内存数据覆盖配置）
    - 备份 `Preferences.json.bak`
    - 写入 `Settings` 的 `Listary5.ProLicense.Name / .Email / .Key` 三键
    - 复读校验，确认写入成功
-4. 重启 Listary，Pro 状态生效
+4. 重启 Listary，Pro 状态自动生效
 
 ## 快速开始
 
@@ -36,8 +51,8 @@ powershell -ExecutionPolicy Bypass -File build.ps1
 .\tools\test_tool.exe   # 自检（期望 ALL PASS）
 ```
 
-配置文件位置：`%APPDATA%\Listary\UserProfile\Settings\Preferences.json`
-（写入前自动备份为 `.bak`；仅更新三键，其余设置原样保留）。
+配置文件位置：`%APPDATA%\Listary\UserProfile\Settings\Preferences.json`  
+（写入前自动备份为 `.bak`；仅更新三键，其余搜索动作与历史设置原样保留）。
 
 ## 目录结构
 
@@ -57,6 +72,7 @@ listary-keygen/
 ├── docs/
 │   ├── algorithm.md             # CheckLicense 算法原理（常量/哈希/校验串/弱点分析）
 │   └── reverse-engineering.md   # 逆向方法论（保护机制/动态解壳/还原步骤）
+├── web/                         # 官网与在线算法计算器前端源码 (React + TailwindCSS)
 ├── build.ps1                    # 一键构建脚本
 └── LICENSE                      # MIT
 ```
