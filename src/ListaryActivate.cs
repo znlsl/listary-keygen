@@ -111,19 +111,36 @@ namespace ListaryActivateApp
 
             Label lblWarn = new Label();
             lblWarn.Text = "仅供授权范围内的逆向学习与研究，请遵守 Listary 服务条款，勿用于未授权用途";
-            lblWarn.ForeColor = Color.Silver;
-            lblWarn.Font = new Font("Microsoft YaHei UI", 7.5F);
-            lblWarn.SetBounds(12, y, 656, 18);
+            lblWarn.ForeColor = Color.FromArgb(90, 90, 90);
+            lblWarn.Font = new Font("Microsoft YaHei UI", 8.5F);
+            lblWarn.SetBounds(12, y, 656, 20);
             Controls.Add(lblWarn);
-            y += 20;
+            y += 24;
 
-            Label lblLinks = new Label();
-            lblLinks.Text = "正版购买: " + BUY_URL + "   |   开源仓库: " + REPO_URL + "   |   版本: " + VERSION_TAG;
-            lblLinks.ForeColor = Color.Gray;
-            lblLinks.Font = new Font("Microsoft YaHei UI", 7.5F);
-            lblLinks.AutoEllipsis = true;
-            lblLinks.SetBounds(12, y, 656, 18);
-            Controls.Add(lblLinks);
+            LinkLabel lnkLinks = new LinkLabel();
+            string p1 = "正版购买: ";
+            string p2 = "   |   开源仓库: ";
+            string p3 = "   |   版本: " + VERSION_TAG;
+            lnkLinks.Text = p1 + BUY_URL + p2 + REPO_URL + p3;
+            lnkLinks.ForeColor = Color.FromArgb(90, 90, 90);
+            lnkLinks.Font = new Font("Microsoft YaHei UI", 8.5F);
+            lnkLinks.LinkColor = Color.FromArgb(0, 102, 204);
+            lnkLinks.ActiveLinkColor = Color.FromArgb(0, 60, 140);
+            lnkLinks.VisitedLinkColor = Color.FromArgb(0, 102, 204);
+            lnkLinks.LinkBehavior = LinkBehavior.HoverUnderline;
+            lnkLinks.AutoEllipsis = true;
+            lnkLinks.SetBounds(12, y, 656, 20);
+            lnkLinks.Links.Clear();
+            lnkLinks.Links.Add(p1.Length, BUY_URL.Length, BUY_URL);
+            lnkLinks.Links.Add(p1.Length + BUY_URL.Length + p2.Length, REPO_URL.Length, REPO_URL);
+            lnkLinks.LinkClicked += delegate(object sender, LinkLabelLinkClickedEventArgs e)
+            {
+                if (e.Link != null && e.Link.LinkData != null)
+                {
+                    OpenUrl(e.Link.LinkData.ToString());
+                }
+            };
+            Controls.Add(lnkLinks);
 
             Log("就绪（v" + VERSION_TAG + "）。目标配置: " + PrefsWriter.DefaultPath());
             Log("提示：写入前请退出 Listary，否则退出时内存数据会覆盖新配置。");
@@ -248,6 +265,25 @@ namespace ListaryActivateApp
             {
                 MessageBox.Show(this, "写入失败: " + error + "\r\n\r\n原配置已保留（备份: " + path + PrefsWriter.BACKUP_SUFFIX + "）",
                                 "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start(url);
+                }
+                catch
+                {
+                    MessageBox.Show("无法打开链接: " + ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
     }
