@@ -32,7 +32,7 @@ function Invoke-Csc {
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
 # one-click activation GUI (generation + writing in a single window)
-Invoke-Csc 'winexe' 'ListaryActivate.exe' ($refsGui + $refsWeb) @((Join-Path $src 'ListaryActivate.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'))
+Invoke-Csc 'winexe' 'ListaryActivate.exe' ($refsGui + $refsWeb) @((Join-Path $src 'ListaryActivate.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'), (Join-Path $src 'HostsGuard.cs'))
 
 # console self-check (algorithm + config writer)
 Invoke-Csc 'exe' 'test_tool.exe' (@('/r:System.dll') + $refsWeb + @(("/r:" + (Join-Path $fx 'System.Numerics.dll')))) @((Join-Path $tests 'test_tool.cs'), (Join-Path $src 'LicenseAlgo.cs'), (Join-Path $src 'PrefsWriter.cs'))

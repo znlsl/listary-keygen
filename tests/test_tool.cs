@@ -120,6 +120,10 @@ static class TestTool
         // backup exists
         Check(File.Exists(path + ".bak"), "backup file created");
 
+        // anti-rollback: LastUpdateTimeV1 (LastProCheckFailDate) reset to MinValue
+        Check(json.Contains("LastUpdateTimeV1") && json.Contains("0001-01-01T00:00:00"),
+              "online-check failure date reset (LastUpdateTimeV1 -> MinValue)");
+
         Console.WriteLine();
         Console.WriteLine(failures == 0 ? "ALL PASS" : (failures + " FAILURES"));
         Environment.ExitCode = failures == 0 ? 0 : 1;

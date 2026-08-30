@@ -31,7 +31,7 @@ namespace ListaryActivateApp
         {
             Text = "Listary Pro 一键激活";
             Font = new Font("Microsoft YaHei UI", 9F);
-            ClientSize = new Size(680, 500);
+            ClientSize = new Size(680, 560);
             StartPosition = FormStartPosition.CenterScreen;
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -98,6 +98,19 @@ namespace ListaryActivateApp
             btnBrowse.SetBounds(568, y - 2, 100, 26);
             btnBrowse.Click += delegate { BrowseConfig(); };
             Controls.Add(btnBrowse);
+            y += 38;
+
+            // anti-rollback protection: block the activation server so the
+            // scheduled online check (ScheduleAutoCheck) never invalidates the license
+            Label lblGuard = new Label();
+            lblGuard.SetBounds(12, y, 460, 24);
+            UpdateGuardLabel(lblGuard);
+            Controls.Add(lblGuard);
+            Button btnGuard = new Button();
+            btnGuard.Text = "屏蔽激活服务器（防回退）";
+            btnGuard.SetBounds(480, y - 2, 188, 28);
+            btnGuard.Click += delegate { BlockActivationServer(lblGuard, btnGuard); };
+            Controls.Add(btnGuard);
             y += 40;
 
             txtLog = new TextBox();
@@ -144,6 +157,47 @@ namespace ListaryActivateApp
 
             Log("就绪（v" + VERSION_TAG + "）。目标配置: " + PrefsWriter.DefaultPath());
             Log("提示：写入前请退出 Listary，否则退出时内存数据会覆盖新配置。");
+        }
+
+        void UpdateGuardLabel(Label lbl)
+        {
+            if (HostsGuard.IsBlocked())
+            {
+                lbl.Text = "✓ 已屏蔽激活服务器 account.listary.com —— 在线校验不会回退激活状态";
+                lbl.ForeColor = Color.ForestGreen;
+            }
+            else
+            {
+                lbl.Text = "⚠ 未屏蔽激活服务器 —— Listary 启动 15 分钟后联网校验，失败累计 7 天会回退";
+                lbl.ForeColor = Color.Firebrick;
+            }
+        }
+
+        void BlockActivationServer(Label lbl, Button btn)
+        {
+            if (HostsGuard.IsBlocked())
+            {
+                MessageBox.Show(this, "激活服务器已在 hosts 中屏蔽，无需重复操作。", "提示",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            DialogResult r = MessageBox.Show(this,
+                "将在系统 hosts 文件中添加：\r\n\r\n    " + HostsGuard.BlockEntry +
+                "\r\n\r\n作用：让 Listary 的在线激活校验（account.listary.com）无法连接。\r\n" +
+                "联网校验失败（网络异常）时程序不会清除本地激活配置，且本地校验不受影响。\r\n" +
+                "需要管理员权限（UAC 弹窗）。\r\n\r\n继续？",
+                "屏蔽激活服务器", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r != DialogResult.Yes) return;
+            bool launched = HostsGuard.BlockViaUac();
+            System.Threading.Thread.Sleep(1200);   // give the elevated process time to finish
+            bool nowBlocked = HostsGuard.IsBlocked();
+            UpdateGuardLabel(lbl);
+            if (nowBlocked)
+                Log("已屏蔽激活服务器（hosts 写入成功）——在线校验将因网络异常而不做任何处理。");
+            else if (launched)
+                Log("已发起 hosts 写入，但未检测到生效（可能 UAC 被拒绝或写入失败），请手动检查。");
+            else
+                Log("hosts 写入未执行（UAC 被取消）。可再次点击按钮重试。");
         }
 
         void Log(string msg)

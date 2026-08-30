@@ -40,6 +40,25 @@
    - 复读校验，确认写入成功
 4. 重启 Listary，Pro 状态自动生效
 
+## 为什么会被联网回退（v1.0.0 用户反馈）
+
+反编译 `ProService.ScheduleAutoCheck` 发现的回退机制：
+
+```
+Listary 启动 → 15 分钟后 POST account.listary.com/api/v1/activate（在线校验本机 email+key）
+  → 校验失败（InvalidLicense）→ 记录 LastProCheckFailDate 到 Preferences.json
+  → 之后每次启动校验失败且距首次失败 > 7 天 → 清空 ProLicense 三键（回退！）
+```
+
+注意 `LastProCheckFailDate` 在 JSON 里**伪装成 `LastUpdateTimeV1`** 键名存储。
+
+**v1.0.1 的双重防护**（本工具自动完成）：
+
+1. **写入激活配置时同步重置 `LastUpdateTimeV1` → MinValue**——7 天倒计时永远从零开始
+2. **「屏蔽激活服务器」按钮**：往 hosts 写入 `0.0.0.0 account.listary.com`（UAC 提权）。
+   屏蔽后在线校验网络异常 → 反编译确认 `UnknownError` 分支**无任何操作** → 永不清空；
+   本地离线校验（`CheckLicenseSafe`）不受影响。
+
 ## 快速开始
 
 ```powershell
@@ -63,7 +82,8 @@ listary-keygen/
 ├── src/
 │   ├── ListaryActivate.cs       # 一键激活 GUI（生成 + 填写一体化）
 │   ├── LicenseAlgo.cs           # 算法核心（H1/H2/H3/Checksum/Generate/Verify/随机邮箱）
-│   └── PrefsWriter.cs           # 配置写入逻辑（备份/解析/写回/校验，与 UI 解耦）
+│   ├── PrefsWriter.cs           # 配置写入逻辑（备份/解析/写回/校验/重置在线校验计时）
+│   └── HostsGuard.cs            # hosts 屏蔽激活服务器（防联网回退，UAC 提权）
 ├── tools/                       # 预编译 exe（.NET Framework 4.8，零依赖，双击即用）
 │   ├── ListaryActivate.exe
 │   └── test_tool.exe

@@ -17,6 +17,10 @@ namespace ListaryLicense
         public const string KEY_NAME = "Listary5.ProLicense.Name";
         public const string KEY_EMAIL = "Listary5.ProLicense.Email";
         public const string KEY_LICENSE = "Listary5.ProLicense.Key";
+        // disguised JSON key: property LastProCheckFailDate (Pro online-check failure date)
+        // stored under the name "LastUpdateTimeV1" - used by ScheduleAutoCheck to clear
+        // the license after 7 days of failed online checks. We reset it on every write.
+        public const string KEY_FAILDATE = "LastUpdateTimeV1";
         public const string BACKUP_SUFFIX = ".bak";
 
         public static string DefaultPath()
@@ -81,7 +85,11 @@ namespace ListaryLicense
                 settings[KEY_NAME] = name;
                 settings[KEY_EMAIL] = email;
                 settings[KEY_LICENSE] = license;
+                // reset the online-check failure date so the 7-day countdown never starts
+                // (ProService.ScheduleAutoCheck clears the three keys once now - failDate > 7d)
+                settings[KEY_FAILDATE] = "0001-01-01T00:00:00";
                 log.AppendLine("[3/5] 已写入 " + KEY_NAME + " / " + KEY_EMAIL + " / " + KEY_LICENSE);
+                log.AppendLine("      并重置在线校验失败计时（" + KEY_FAILDATE + " -> MinValue）");
 
                 // serialize & write back (UTF-8 no BOM, keep other settings intact)
                 var writer = new JavaScriptSerializer();
